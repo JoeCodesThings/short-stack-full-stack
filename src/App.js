@@ -11,16 +11,16 @@ import {
 } from "@aws-amplify/ui-react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
-import { listNotes } from "../src/graphql/queries";
+import { listNotes } from "./graphql/queries";
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
-} from "../src/graphql/mutations";
+} from "./graphql/mutations";
 
 import { Amplify } from "aws-amplify";
 import { getUrl, uploadData, remove } from 'aws-amplify/storage';
 import { generateClient } from "aws-amplify/api";
-import awsconfig from "../src/amplifyconfiguration.json";
+import awsconfig from "./amplifyconfiguration.json";
 
 Amplify.configure(awsconfig);
 
