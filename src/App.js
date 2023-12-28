@@ -39,7 +39,7 @@ const App = ({ signOut }) => {
     await Promise.all(
       notesFromAPI.map(async (note) => {
         if (note.image) {
-          const url = await getUrl({ key:note.name });
+          const url = await getUrl({ key:note.id });
           note.image = url;
         }
         return note;
@@ -56,17 +56,16 @@ const App = ({ signOut }) => {
     const data = {
       name: form.get("name"),
       description: form.get("description"),
-      image: (image !== null ? image.name : ""),
+      image: image.name,
     };
-
-    if (!!data.image) await uploadData({ key:data.name, data:image });
     
-    await client.graphql({
+    const result = await client.graphql({
       query: createNoteMutation,
       variables: { input: data },
     });
 
-    await fetchNotes();
+    if (!!data.image) await uploadData({ key:result.data.createNote.id, data:image }).result;
+    fetchNotes();
 
     event.target.reset();
   }
@@ -85,7 +84,7 @@ const App = ({ signOut }) => {
 
   return (
     <View className="App">
-      <Heading level={1}>My Notepad</Heading>
+      <Heading level={1}>My Bassdrop</Heading>
       <View as="form" margin="3rem 0" onSubmit={createNote}>
         <Flex direction="row" justifyContent="center">
           <TextField
@@ -130,7 +129,7 @@ const App = ({ signOut }) => {
             <Text as="span">{note.description}</Text>
             {note.image && (
               <Image
-                src={note.image}
+                src={note.image.url.href}
                 alt={`visual aid for ${notes.name}`}
                 style={{ width: 400 }}
               />
